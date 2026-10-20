@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Video Studio – Dựng video ngay trên trình duyệt</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">AI Video Studio</div>
+  <nav aria-label="Điều hướng">
+    <a href="#kich-ban">Kịch bản</a>
+    <a href="#tai-nguyen">Tài nguyên</a>
+    <a href="#phu-de">Phụ đề</a>
+    <a href="#xem-truoc">Xem trước &amp; xuất</a>
+    <a href="#gioi-han">Giới hạn</a>
+  </nav>
+</header>
+
+<main class="layout">
+  <div class="col-left">
+    <section class="intro">
+      <h1>Ghép ảnh, video, âm thanh và phụ đề thành một video</h1>
+      <p>Mọi thứ chạy ngay trong trình duyệt của bạn, không gửi file đi đâu và không cần tài khoản. Làm theo 4 bước bên dưới.</p>
+      <ol class="howto">
+        <li>Nhập kịch bản (dùng cho phụ đề).</li>
+        <li>Tải lên ảnh hoặc video, và file âm thanh nếu muốn có tiếng.</li>
+        <li>Chỉnh tỷ lệ khung hình và kiểu phụ đề.</li>
+        <li>Bấm “Xuất video”, đợi video chạy hết rồi tải về.</li>
+      </ol>
+    </section>
+
+    <section id="kich-ban" class="panel">
+      <h2>1. Kịch bản</h2>
+      <label for="script">Nội dung kịch bản</label>
+      <textarea id="script" rows="6" placeholder="Mỗi câu hoặc mỗi dòng sẽ thành một dòng phụ đề."></textarea>
+      <div class="row">
+        <div>
+          <label for="lang">Ngôn ngữ</label>
+          <select id="lang">
+            <option value="vi">Tiếng Việt</option>
+            <option value="en-US">Tiếng Anh (Mỹ)</option>
+          </select>
+        </div>
+        <div>
+          <label for="voice">Giọng đọc thử</label>
+          <select id="voice"><option>Đang tải giọng đọc…</option></select>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="btn-speak" type="button">Đọc thử kịch bản</button>
+        <button id="btn-stop-speak" type="button" class="ghost">Dừng đọc</button>
+      </div>
+      <p class="note">Giọng đọc thử chỉ phát ra loa. Trình duyệt không cho thu giọng này vào video, nên để video có tiếng, hãy tải lên file âm thanh ở bước 2.</p>
+    </section>
+
+    <section id="tai-nguyen" class="panel">
+      <h2>2. Tài nguyên</h2>
+      <label for="in-images">Ảnh (JPG, PNG, WebP – chọn được nhiều ảnh)</label>
+      <input id="in-images" type="file" accept="image/jpeg,image/png,image/webp" multiple>
+      <ul id="thumbs" class="thumbs" aria-label="Danh sách ảnh"></ul>
+
+      <label for="in-video">Video nền (MP4, WebM)</label>
+      <input id="in-video" type="file" accept="video/mp4,video/webm">
+      <p id="video-info" class="note"></p>
+
+      <label for="in-audio">Âm thanh (MP3, WAV hoặc định dạng trình duyệt hỗ trợ)</label>
+      <input id="in-audio" type="file" accept="audio/*">
+      <p id="audio-info" class="note"></p>
+
+      <div class="row">
+        <div>
+          <label for="per-image">Giây cho mỗi ảnh (khi không có âm thanh/video)</label>
+          <input id="per-image" type="number" min="1" max="30" value="4">
+        </div>
+        <div>
+          <label for="fit">Cách đặt hình vào khung</label>
+          <select id="fit">
+            <option value="cover">Phủ kín khung (có thể cắt)</option>
+            <option value="contain">Vừa khung (có viền nền)</option>
+          </select>
+        </div>
+      </div>
+      <p class="note">Nếu có cả video và ảnh, video được ưu tiên. Tiếng gốc của video nền không được đưa vào file xuất.</p>
+    </section>
+
+    <section id="phu-de" class="panel">
+      <h2>3. Khung hình và phụ đề</h2>
+      <div class="row">
+        <div>
+          <label for="ratio">Tỷ lệ</label>
+          <select id="ratio">
+            <option value="16:9">16:9 ngang (1280×720)</option>
+            <option value="9:16">9:16 dọc (720×1280)</option>
+            <option value="1:1">1:1 vuông (1080×1080)</option>
+          </select>
+        </div>
+        <div>
+          <label for="bg">Màu nền</label>
+          <input id="bg" type="color" value="#101820">
+        </div>
+      </div>
+      <label class="check"><input id="sub-on" type="checkbox" checked> Hiện phụ đề</label>
+      <div class="row">
+        <div>
+          <label for="sub-color">Màu chữ</label>
+          <input id="sub-color" type="color" value="#ffffff">
+        </div>
+        <div>
+          <label for="sub-pos">Vị trí</label>
+          <select id="sub-pos">
+            <option value="bottom">Phía dưới</option>
+            <option value="middle">Giữa</option>
+            <option value="top">Phía trên</option>
+          </select>
+        </div>
+      </div>
+      <label for="sub-size">Cỡ chữ: <output id="sub-size-out">36</output></label>
+      <input id="sub-size" type="range" min="18" max="80" value="36">
+      <p class="note"><strong>Đây là phụ đề cơ bản (tĩnh):</strong> kịch bản được chia thành các câu rồi trải đều theo độ dài chữ trên toàn bộ thời lượng. Phụ đề không nhận diện lời nói nên có thể lệch so với âm thanh.</p>
+    </section>
+  </div>
+
+  <aside id="xem-truoc" class="col-right">
+    <div class="stage">
+      <canvas id="canvas" width="1280" height="720" aria-label="Bản xem trước video"></canvas>
+    </div>
+    <div class="bar" aria-hidden="true"><div id="bar-fill"></div></div>
+    <div class="timeline"><span id="t-now">0:00</span><span id="t-total">0:00</span></div>
+    <div class="actions">
+      <button id="btn-play" type="button">Phát</button>
+      <button id="btn-pause" type="button" class="ghost">Tạm dừng</button>
+      <button id="btn-stop" type="button" class="ghost">Về đầu</button>
+    </div>
+    <button id="btn-export" type="button" class="primary">Xuất video</button>
+    <div id="status" class="status" role="status" aria-live="polite">Sẵn sàng. Hãy tải lên ít nhất một ảnh hoặc một video.</div>
+    <a id="download" class="download" hidden>Tải video xuống</a>
+    <p id="convert" class="note" hidden></p>
+  </aside>
+</main>
+
+<section id="gioi-han" class="limits">
+  <h2>Tính năng nào hoạt động thật, tính năng nào không?</h2>
+  <div class="two">
+    <div>
+      <h3>Hoạt động trực tiếp trong trình duyệt</h3>
+      <ul>
+        <li>Ghép ảnh hoặc video nền với file âm thanh bạn tải lên.</li>
+        <li>Phụ đề cơ bản chia theo câu, chỉnh màu, cỡ và vị trí.</li>
+        <li>Xem trước, tạm dừng, xuất WebM (hoặc MP4 nếu trình duyệt cho phép).</li>
+        <li>Đọc thử kịch bản bằng giọng có sẵn của thiết bị.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Không có trong bản này</h3>
+      <ul>
+        <li>Tạo video, avatar biết nói, đồng bộ khẩu hình bằng AI.</li>
+        <li>Giọng đọc AI chất lượng cao được thu vào video.</li>
+        <li>Phụ đề tự khớp chính xác với lời nói.</li>
+      </ul>
+      <p>Các tính năng trên cần mô hình AI chạy cục bộ hoặc dịch vụ bên ngoài. Bản này chỉ ghép tài nguyên bạn cung cấp, nên không phải công cụ tạo video AI.</p>
+    </div>
+  </div>
+</section>
+<footer class="foot">AI Video Studio – bản MVP chạy hoàn toàn trên trình duyệt.</footer>
+<script src="app.js"></script>
+</body>
+</html>
